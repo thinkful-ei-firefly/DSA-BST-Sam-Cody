@@ -86,9 +86,11 @@ function main() {
   BST.insert({ key: 5, value: 'something' })
   BST.insert({ key: 7, value: null })
 
-  BST.remove(7)
+  // BST.remove(7)
 
-  console.log(thirdLargest(BST))
+  // console.log(thirdLargest(BST))
+
+  // console.log(isBalanced(BST))
 
   // BST.insert({key: 'E', value: null})
   // BST.insert({key: 'A', value: null})
@@ -104,7 +106,7 @@ function main() {
   // BST.insert({key: 'N', value: null})
 
   // console.log(bstHeight(BST))
-  console.log(isBst(BST))
+  // console.log(isBst(BST))
 }
 
 main()
@@ -188,3 +190,62 @@ function findLargest(bst) {
 }
 
 
+// 8.) Balanced BST
+
+function isBalanced(t, top=true) { //top=true tells us its the first iteration
+  if (!t) {
+    return 0 //base case is 0
+  }
+  let countR = isBalanced(t.right, false) //calling function for left and right
+  let countL = isBalanced(t.left, false) //we specifiy top=false because it's not the first iteration
+  if (countL === false|| countR === false) { //if we have found the tree to be unbalanced at any level, it will return false
+    return false                             //so if line 204 is ever true, 201 will evaluate true every loop after
+  }
+  if (countL > countR+1 || countR > countL+1) {//checks if the tree is unbalanced
+    return false
+  }
+  if (top === true) return true //if we are in the first iteration of the function, and the tree was never found to be unbalanced, we return true
+  if (countL > countR) { //returning the height of the tree
+    return countL + 1
+  } else {
+    return countR + 1
+  }
+}
+
+function sameBST(arr1, arr2) {
+  if(arr1.length === 0 || arr2.length === 0) { //base case, if we got here, they match
+    return true
+  }
+  if (arr1.length !== arr2.length) return false //if different lengths, we know it's false
+  let root1=arr1[0] //root is first value in each array
+  let root2=arr2[0]
+  if (root1 !== root2) return false //if root values don't match, trees don't match
+  let higherNums1 = [] //546
+  let higherNums2 = [] //546
+  let lowerNums1 = [] //102 
+  let lowerNums2 = [] //120
+  for (let i=1; i< arr1.length; i++) { 
+    if (arr1[i] > root1) higherNums1.push(arr1[i])//push numbers higher than root to one array
+    if (arr1[i] < root1) lowerNums1.push(arr1[i])//push numbers lower than root to one array
+  }
+  for (let i=1; i< arr2.length; i++) {
+    if (arr2[i] > root1) higherNums2.push(arr2[i])
+    if (arr2[i] < root1) lowerNums2.push(arr2[i])
+  }
+  const higherCheck = sameBST(higherNums1, higherNums2)
+  const lowerCheck = sameBST(lowerNums1, lowerNums2)
+  if (higherCheck === true && lowerCheck === true) return true
+  return false
+}
+
+console.log(sameBST([3,5,4,6,1,0,2],[3,1,5,2,4,6,0]))
+
+//           3
+//         1   5
+//       0  2 4 6 
+//
+//           3
+//        1     5
+//       0 2   4 6
+//
+//
